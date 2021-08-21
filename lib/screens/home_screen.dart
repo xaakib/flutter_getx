@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
 
-class HomeScreen extends StatelessWidget {
+import 'other_screen.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late double raingStar = 0.5;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("Screen Loaded");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -19,8 +34,9 @@ class HomeScreen extends StatelessWidget {
           children: [
             SizedBox(height: 30),
             RatingBar.builder(
-              initialRating: 3,
+              initialRating: raingStar,
               minRating: 1,
+              itemSize: 18,
               direction: Axis.horizontal,
               allowHalfRating: true,
               itemCount: 5,
@@ -31,10 +47,13 @@ class HomeScreen extends StatelessWidget {
               ),
               onRatingUpdate: (rating) {
                 print(rating);
+                setState(() {
+                  raingStar = rating;
+                });
               },
             ),
             Text(
-              "raing",
+              "Raings $raingStar".toString(),
               style: TextStyle(
                 fontSize: 18,
               ),
