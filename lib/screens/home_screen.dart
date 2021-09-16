@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_getx/screens/search_screen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-
-import 'other_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,14 +14,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late double raingStar = 0.5;
+  late String stringValue = "";
+  getStringValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+   
+      setState(() {
+        stringValue = (prefs.getString('division') != null ? prefs.getString('division'): "Epmty" )!;
+      });
+
+  }
+
   @override
   void initState() {
     super.initState();
+    getStringValuesSF();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Screen Loaded");
+    print("Screen Loaded : $stringValue");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -57,7 +70,23 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 18,
               ),
-            )
+            ),
+            SizedBox(
+              height: 200,
+            ),
+           // ignore: unnecessary_null_comparison
+           Text(stringValue) ,
+            SizedBox(height: 100),
+            CupertinoButton(
+                child: Text("Search Screen"),
+                onPressed: () async {
+                  // SharedPreferences prefs = await SharedPreferences.getInstance();
+                  // prefs.remove('division');
+                  Get.to(SearchScreen(),
+                  
+                  
+                  );
+                })
           ],
         ),
       ),
