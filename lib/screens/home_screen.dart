@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_getx/controllers/count_controller.dart';
+import 'package:flutter_getx/screens/newscreen.dart';
 import 'package:flutter_getx/screens/search_screen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'other_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,12 +22,15 @@ class _HomeScreenState extends State<HomeScreen> {
   getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
-   
-      setState(() {
-        stringValue = (prefs.getString('division') != null ? prefs.getString('division'): "Epmty" )!;
-      });
 
+    setState(() {
+      stringValue = (prefs.getString('division') != null
+          ? prefs.getString('division')
+          : "Epmty")!;
+    });
   }
+
+  final Controller controller = Get.put(Controller());
 
   @override
   void initState() {
@@ -74,17 +81,74 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 200,
             ),
-           // ignore: unnecessary_null_comparison
-           Text(stringValue) ,
+            Obx(() => Text("Clicks: ${controller.count.toString()}")),
+            // ignore: unnecessary_null_comparison
+            Obx(() => Text("Division: ${controller.division.toString()}")),
             SizedBox(height: 100),
+            CupertinoButton(
+                child: Text("Other Screen"),
+                onPressed: () async {
+                  // SharedPreferences prefs = await SharedPreferences.getInstance();
+                  // prefs.remove('division');
+                  Get.to(
+                    OtherScreen(),
+                  );
+                }),
             CupertinoButton(
                 child: Text("Search Screen"),
                 onPressed: () async {
                   // SharedPreferences prefs = await SharedPreferences.getInstance();
                   // prefs.remove('division');
-                  Get.to(SearchScreen(),
-                  
-                  
+                  Get.to(
+                    SearchScreen(),
+                  );
+                }),
+            CupertinoButton(
+                child: Text("ShowButtom Screen"),
+                onPressed: () async {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (builder) {
+                        return new Container(
+                          height: 350.0,
+                          color: Colors
+                              .transparent, //could change this to Color(0xFF737373),
+                          //so you don't have to change MaterialApp canvasColor
+                          child: new Container(
+                              decoration: new BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: new BorderRadius.only(
+                                      topLeft: const Radius.circular(10.0),
+                                      topRight: const Radius.circular(10.0))),
+                              child: Column(
+                                children: [
+                                  Obx(() => Text(
+                                      "Clicks: ${controller.count.toString()}")),
+                                  SizedBox(height: 20),
+                                  Obx(() => Text(
+                                      "Clicks: ${controller.division.toString()}")),
+                                  SizedBox(height: 20),
+                                  CupertinoButton(
+                                      child: Text("Count++"),
+                                      onPressed: () => controller.increment()),
+                                  SizedBox(height: 20),
+                                  CupertinoButton(
+                                      child: Text("Count--"),
+                                      onPressed: () => controller.decrement()),
+                                  SizedBox(height: 20),
+                                ],
+                              )),
+                        );
+                      });
+                }),
+            SizedBox(height: 100),
+            CupertinoButton(
+                child: Text("New Screen"),
+                onPressed: () async {
+                  // SharedPreferences prefs = await SharedPreferences.getInstance();
+                  // prefs.remove('division');
+                  Get.to(
+                    Newscreen(),
                   );
                 })
           ],

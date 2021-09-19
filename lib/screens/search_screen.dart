@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter_getx/controllers/count_controller.dart';
 import 'package:flutter_getx/screens/home_screen.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -31,6 +32,8 @@ class _SearchScreenState extends State<SearchScreen> {
     });
     return "Sucess";
   }
+
+  final Controller controller = Get.put(Controller());
 
   var _foundUsers = [];
   @override
@@ -87,14 +90,17 @@ class _SearchScreenState extends State<SearchScreen> {
                           subtitle: Text(
                               '${_foundUsers[index]["age"].toString()} years old'),
                           onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            // ignore: unused_element
-                           
-                              prefs.setString('division',
-                                  _foundUsers[index]['name'].toString());
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
-                          
+                            controller.divisionItem(_foundUsers[index]['name']);
+                            // SharedPreferences prefs =
+                            //     await SharedPreferences.getInstance();
+                            // // ignore: unused_element
+
+                            // prefs.setString('division',
+                            //     _foundUsers[index]['name'].toString());
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
                           },
                         ),
                       ),
